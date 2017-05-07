@@ -1,0 +1,7 @@
+# [weight:] arrival_time length, arrival_time length, ...
+# Note that, make sure that two packets from the same flow
+# do not have the same arrival time, otherwise, the results
+# would not be unique
+0 2, 1 3, 2 6
+1: 0 6, 1 3
+0 3, 1 1, 2 6
