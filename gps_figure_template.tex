@@ -1,0 +1,71 @@
+% Template for drawing GPS figure
+% Author: Long Gong
+\documentclass[border=2pt]{standalone}
+%%%<
+\usepackage{verbatim}
+%%%>
+\begin{comment}
+:Title: Template for GPS Figure
+:Author: Long Gong
+
+A template for GPS figure. 
+
+In some ways, this TeX script works as the "model" of our application 
+for visualizing a GPS simulation results. 
+
+Parameters:
+    width: scalar, total length of x axis
+    height: scalar, total length of y axis
+    xlabels: list, labels for x axis
+    ylabels: list, labels for y axis
+    flows: list of dict, packets in each flow, its detailed structures 
+           look like as follows,
+            [{
+               "id": <flow id>,
+               "packets": [
+               {
+                "v_start_time": <virtual start time>,
+                "v_finish_time": <virtual finish time>,
+                "y_min": <bottom border value>,
+                "y_max": <top border value>
+               },
+               ...
+               ] 
+            },
+            ...
+            ]
+
+Programmed in TikZ by Long Gong. Templating language is Jinja2, 
+templaing syntax is the default setting of Jinja2.
+\end{comment}
+
+\usepackage{tikz}
+\usetikzlibrary{shapes, positioning}
+
+
+\begin{tikzpicture}
+
+%% virtual time axis
+\draw[thick,->] (0,0) -- ({{ width }},0) node[anchor=north west] {virtual time};
+\draw[thick,->] (0,0) -- (0,{{ height }}) node[anchor=south east] {flow};
+
+
+%% place x axis label
+{% for xl in xlabels %}
+    \draw ({{ xl }}, 1pt) -- ({{ xl }}, -1pt) node[anchor=north] {{"{"}}${{ xl }}${{"}"}};
+{% endfor %}
+
+%% place y axis label
+{% for yl in ylabels %}
+    \draw (1pt, {{ yl }}) -- (-1pt, {{ yl }}) node[anchor=east] {{"{"}}flow ${{ yl }}${{"}"}};
+{% endfor %}
+
+% flows
+{% for flow in flows %}
+% flow {{ flow.id }}
+{% for pkt in flow.packets %}
+\filldraw[fill=white, draw=blue,very thick] ({{ pkt.v_start_time }}, {{ pkt.y_min }} ) rectangle ({{ pkt.v_finish_time }}, {{ pkt.y_max }});
+{% endfor %}
+{% endfor %}
+
+\end{tikzpicture}
