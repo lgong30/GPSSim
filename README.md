@@ -26,7 +26,28 @@ Go to directory where `GPSSimctl.py` locates, and open a terminal there, and the
 python ./GPSSimctl.py make_tex --help
 ```
 
-It will show ypu how to manage the options.
+It will show ypu how to manage the options like below,
+
+```shell
+usage: GPSSimctl.py make_tex [-?] [--input INPUT] [--template TEMPLATE]
+                             [--template-dir TEMPLATE_DIR] [--output OUTPUT]
+                             [--output-dir OUTPUT_DIR]
+
+Generate GPS figure
+
+optional arguments:
+  -?, --help            show this help message and exit
+  --input INPUT, -i INPUT
+                        Input data (default: packets.txt)
+  --template TEMPLATE, -t TEMPLATE
+                        OPTIONAL: template file
+  --template-dir TEMPLATE_DIR, -D TEMPLATE_DIR
+                        OPTIONAL: directory which stores your template
+  --output OUTPUT, -o OUTPUT
+                        Output filename (default: example.tex
+  --output-dir OUTPUT_DIR, -d OUTPUT_DIR
+                        OPTIONAL: directory to store output file
+```
 
 Note that, the input format should be as follows.
 
@@ -37,6 +58,8 @@ Note that, the input format should be as follows.
 Here, each line corresponds to a flow, where `weight` is the weight for the respective flow, which is optional. If you do not input `weight`, the default weight (i.e., **1**) will be used. The following data are the arrival time and length for each packet in the flow. Packets are separated by `,` and arrival time and length are separated by  ` `. Note that, `weight` can be any positive float number, where `arrival time` and `length` can only be integers. 
 
 Note that, you should make sure that no two packets from the same flow have the same arrival time, otherwise, the results will not be unique.
+
+`packets.txt` shows you an example.
 
 
 
