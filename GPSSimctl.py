@@ -55,7 +55,7 @@ class GPSSimExampleGenerator(Command):
                help=u"OPTIONAL: directory which stores your template",
                type=str, default=""),
         Option(u'--output', u'-o', action="store", dest=u"output",
-               help=u"Output filename (default: example.tex",
+               help=u"Output filename (default: example.tex)",
                type=str, default=u'example.tex'),
         Option(u"--output-dir", u"-d", action="store", dest=u"output_dir",
                help=u"OPTIONAL: directory to store output file",
