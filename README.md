@@ -44,7 +44,7 @@ optional arguments:
   --template-dir TEMPLATE_DIR, -D TEMPLATE_DIR
                         OPTIONAL: directory which stores your template
   --output OUTPUT, -o OUTPUT
-                        Output filename (default: example.tex
+                        Output filename (default: example.tex)
   --output-dir OUTPUT_DIR, -d OUTPUT_DIR
                         OPTIONAL: directory to store output file
 ```
