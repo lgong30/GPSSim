@@ -1,6 +1,16 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""This module is for management of the auto-matching application."""
+"""This module is for management of the GPS figure.
+version: 1.0.0
+author: Long Gong
+email: long.github@gmail.com
+
+
+
+Major Changes:
+1. remove the feature of make pdf
+2. make TeXBuilder class more abstract
+"""
 
 
 _IMPORT_ERROR_MSG = u"{0} was not detected, please run \
@@ -14,19 +24,19 @@ try:
     from flask_script import prompt_bool
     from flask_script import prompt_pass
 except ImportError:
-    print (_IMPORT_ERROR_MSG.format("flask_script"))
+    print(_IMPORT_ERROR_MSG.format("flask_script"))
     exit(1)
 
 try:
     from flask import Flask
 except ImportError as msg:
-    print (_IMPORT_ERROR_MSG.format("flask"))
+    print(_IMPORT_ERROR_MSG.format("flask"))
     exit(1)
 
 import os
 
-from . import GPSSim
-from . import TeXBuilder
+from gpssim.simulator import GPSSim
+from gpssim.tex_builder import TeXBuilder
 import math
 
 THIS_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -49,30 +59,28 @@ class GPSSimExampleGenerator(Command):
                type=str, default=u'example.tex'),
         Option(u"--output-dir", u"-d", action="store", dest=u"output_dir",
                help=u"OPTIONAL: directory to store output file",
-               type=str, default=""),
-        Option(u"--show-results", u"-s", action="store_true", dest=u"show_results",
-               help=u"Show detailed results",
-               default=False)
+               type=str, default="")
     )
 
     def __init__(self):
         super(GPSSimExampleGenerator, self).__init__()
 
-    def run(self, input, template, template_dir, output, output_dir, show_results):
+    def run(self, input, template, template_dir, output, output_dir):
         """Generate GPS figure"""
         gps = GPSSim()
         gps.read_pkt_from_file(input)
+        gps.run()
 
         # parameters
         h = 0.6
-        xlabel_upper_bound = 15
-
+        xlabel_upper_bound = 15.0
 
         Width = 0
         Height = 0
         args = {
             "flows": [],
-            "yables": []
+            "ylabels": [],
+            "detailed_results": gps.to_str()
         }
         for flow_id in gps.flows:
             args['flows'].append(
@@ -96,7 +104,8 @@ class GPSSimExampleGenerator(Command):
         args['width'] = Width + 1
         args['height'] = Height + 1
 
-        tex_builder = TeXBuilder(os.path.join(THIS_DIR, "template"), {"default": "gps_figure_template.tex"})
+        # os.path.join(THIS_DIR, "template"), {"default": "gps_figure_template.tex"}
+        tex_builder = TeXBuilder()
         tex_doc = tex_builder.make_tex(args)
 
         if len(output_dir) == 0:
@@ -108,14 +117,6 @@ class GPSSimExampleGenerator(Command):
         with open(os.path.join(output_dir, output), 'w') as texf:
             texf.write("%s\n" % add_msg)
             texf.write(tex_doc)
-
-
-        print("# detailed results:\n")
-        print("flow id, virtual start time, virtual finish time, real start time, real finish time")
-        if show_results:
-            for flow_id in gps.flows:
-                for pkt in gps.flows[flow_id]:
-                    print("{0}, {1}, {2}, {3}, {4}".format(flow_id, pkt.v_start_time, pkt.v_finish_time, pkt.r_start_time, pkt.r_finish_time))
 
 
 if __name__ == "__main__":

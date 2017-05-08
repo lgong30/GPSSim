@@ -4,8 +4,7 @@ TODO: add a current real & virtual time and weight
 import re
 import copy
 
-"""Simple class for packet
-"""
+
 class Packet (object):
     """Simple class for packet"""
     def __init__(self):
@@ -30,7 +29,7 @@ def empty(obj):
 
 
 class GPSSim(object):
-    """TODO"""
+    """Linear Complexity GPS Simulator"""
     def __init__(self):
         self.flows = {}
         self.packets = []
@@ -199,19 +198,30 @@ class GPSSim(object):
         except ZeroDivisionError:
             self.current_v_time = self.pre_v_time
 
+    def to_str(self):
+        """To String
+        """
+        s = "#flow id, virtual start time, virtual finish time, real start time, real finish time\n"
 
-if __name__ == "__main__":
-    # Test reading
-    gps = GPSSim()
-    gps.read_pkt_from_file("packets.txt")
+        for flow_id in self.flows:
+            for pkt in self.flows[flow_id]:
+                s += "{0}, {1}, {2}, {3}, {4}\n".format(flow_id, pkt.v_start_time, pkt.v_finish_time, pkt.r_start_time, pkt.r_finish_time)
 
-    for pkt in gps.packets:
-        print(pkt.flow_id, pkt.arrival_time, pkt.size)
+        return s
 
-    gps.run()
 
-    for pkt in gps.packets:
-        print(pkt.flow_id, pkt.arrival_time, pkt.size, pkt.v_start_time, pkt.v_finish_time)
+# if __name__ == "__main__":
+#     # Test reading
+#     gps = GPSSim()
+#     gps.read_pkt_from_file("packets.txt")
+#
+#     for pkt in gps.packets:
+#         print(pkt.flow_id, pkt.arrival_time, pkt.size)
+#
+#     gps.run()
+#
+#     for pkt in gps.packets:
+#         print(pkt.flow_id, pkt.arrival_time, pkt.size, pkt.v_start_time, pkt.v_finish_time)
 
 
 
